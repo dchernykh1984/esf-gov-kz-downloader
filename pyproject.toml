@@ -7,6 +7,10 @@ requires-python = ">=3.14,<4"
 dependencies = [
     "zeep>=4.3,<5",
     "requests>=2.32,<3",
+    "jinja2>=3.1,<4",
+    # Pure-python PDF rendering: the script runs on a locked-down corporate
+    # Windows machine, where weasyprint's pango dependency needs MSYS2.
+    "xhtml2pdf>=0.2.17,<0.3",
 ]
 
 [dependency-groups]
