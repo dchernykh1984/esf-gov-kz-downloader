@@ -48,7 +48,14 @@ class Node:
         return self._element.text.strip()
 
     def __bool__(self) -> bool:
-        return self._element is not None and bool(str(self))
+        """True when the field is present and carries something.
+
+        A container counts by its children, since it holds no text of its own,
+        while an empty leaf is falsy so templates can skip absent fields.
+        """
+        if self._element is None:
+            return False
+        return bool(str(self)) or len(self._element) > 0
 
     def __html__(self) -> str:
         # Jinja calls this instead of escaping; the text is escaped by hand so
@@ -65,6 +72,25 @@ def parse(body: str) -> Node:
         if "}" in element.tag:
             element.tag = element.tag.rpartition("}")[2]
     return Node(root)
+
+
+def parse_document(body: str, tags: tuple[str, ...]) -> Node:
+    """Parse a body and return the document element itself.
+
+    Exports sometimes wrap the document in a container, so the element is
+    looked up at any depth rather than assumed to be the root.
+    """
+    node = parse(body)
+    root = node._element
+    if root is None:
+        return node
+    if root.tag in tags:
+        return node
+    for tag in tags:
+        found = root.find(f".//{tag}")
+        if found is not None:
+            return Node(found)
+    return node
 
 
 def act_recipient_tins(body: str) -> set[str]:

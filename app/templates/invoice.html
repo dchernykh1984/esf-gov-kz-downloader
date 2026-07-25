@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% macro row(caption, value) %}
+  <tr><td class="caption">{{ caption }}</td><td>{{ value }}</td></tr>
+{% endmacro %}
+
+{% macro party(p) %}
+<table>
+  {{ row(L('tin'), p.tin) }}
+  {{ row(L('name'), p.name) }}
+  {{ row(L('address'), p.address) }}
+  {% if p.countryCode %}{{ row(L('country'), p.countryCode) }}{% endif %}
+  {% if p.certificateSeries or p.certificateNum %}
+    {{ row(L('nds_certificate'), p.certificateSeries ~ ' ' ~ p.certificateNum) }}
+  {% endif %}
+  {% if p.ndsRegistrationDate %}{{ row(L('nds_date'), p.ndsRegistrationDate) }}{% endif %}
+  {% if p.bank %}{{ row(L('bank'), p.bank) }}{% endif %}
+  {% if p.iik %}{{ row(L('iik'), p.iik) }}{% endif %}
+  {% if p.bik %}{{ row(L('bik'), p.bik) }}{% endif %}
+  {% if p.kbe %}{{ row(L('kbe'), p.kbe) }}{% endif %}
+</table>
+{% endmacro %}
+
+{% block content %}
+<h1>{{ L('invoice_title') }}</h1>
+<div class="subtitle">{{ L('reg_number') }}: {{ registration_number }}</div>
+<div class="status">{{ L('status') }}: {{ status }}</div>
+
+<div class="section">{{ L('section_a') }}</div>
+<table>
+  {{ row(L('num'), doc.num) }}
+  {{ row(L('date'), doc.date) }}
+  {{ row(L('turnover_date'), doc.turnoverDate) }}
+  {{ row(L('invoice_type'), doc.invoiceType) }}
+  {% if doc.operatorFullname %}{{ row(L('operator'), doc.operatorFullname) }}{% endif %}
+</table>
+
+<div class="section">{{ L('section_b') }}</div>
+{% for seller in doc.sellers.all('seller') %}{{ party(seller) }}{% endfor %}
+
+<div class="section">{{ L('section_c') }}</div>
+{% for customer in doc.customers.all('customer') %}{{ party(customer) }}{% endfor %}
+
+{% if doc.consignor or doc.consignee %}
+<div class="section">{{ L('section_d') }}</div>
+<table>
+  {% if doc.consignor %}
+    {{ row(L('consignor'), doc.consignor.tin ~ ' ' ~ doc.consignor.name) }}
+    {{ row(L('address'), doc.consignor.address) }}
+  {% endif %}
+  {% if doc.consignee %}
+    {{ row(L('consignee'), doc.consignee.tin ~ ' ' ~ doc.consignee.name) }}
+    {{ row(L('address'), doc.consignee.address) }}
+  {% endif %}
+</table>
+{% endif %}
+
+{% if doc.deliveryTerm %}
+{% set t = doc.deliveryTerm %}
+<div class="section">{{ L('section_e') }}</div>
+<table>
+  {% if t.contractNum %}{{ row(L('contract_num'), t.contractNum) }}{% endif %}
+  {% if t.contractDate %}{{ row(L('contract_date'), t.contractDate) }}{% endif %}
+  {% if t.term %}{{ row(L('payment_term'), t.term) }}{% endif %}
+  {% if t.transportTypeCode %}{{ row(L('transport'), t.transportTypeCode) }}{% endif %}
+  {% if t.warrant %}{{ row(L('warrant'), t.warrant ~ ' ' ~ t.warrantDate) }}{% endif %}
+  {% if t.destination %}{{ row(L('destination'), t.destination) }}{% endif %}
+</table>
+{% endif %}
+
+{% if doc.deliveryDocNum or doc.deliveryDocDate %}
+<div class="section">{{ L('section_f') }}</div>
+<table>
+  {{ row(L('delivery_doc'), doc.deliveryDocNum ~ ' ' ~ doc.deliveryDocDate) }}
+</table>
+{% endif %}
+
+<div class="section">{{ L('section_g') }}{% if doc.productSet.currencyCode %}
+  &mdash; {{ L('currency') }}: {{ doc.productSet.currencyCode }}{% endif %}</div>
+<table class="items">
+  <tr>
+    <th style="width:3%">{{ L('row_no') }}</th>
+    <th style="width:22%">{{ L('description') }}</th>
+    <th style="width:4%">{{ L('unit') }}</th>
+    <th style="width:5%">{{ L('quantity') }}</th>
+    <th style="width:7%">{{ L('unit_price') }}</th>
+    <th style="width:8%">{{ L('price_without_tax') }}</th>
+    <th style="width:5%">{{ L('excise_amount') }}</th>
+    <th style="width:8%">{{ L('turnover_size') }}</th>
+    <th style="width:4%">{{ L('nds_rate') }}</th>
+    <th style="width:7%">{{ L('nds_amount') }}</th>
+    <th style="width:8%">{{ L('price_with_tax') }}</th>
+    <th style="width:19%">{{ L('declaration') }}</th>
+  </tr>
+  {% for product in doc.productSet.products.all('product') %}
+  <tr>
+    <td class="centre">{{ loop.index }}</td>
+    <td>{{ product.description or DASH }}</td>
+    <td class="centre">{{ product.unitNomenclature or DASH }}</td>
+    <td class="num">{{ product.quantity or DASH }}</td>
+    <td class="num">{{ product.unitPrice or DASH }}</td>
+    <td class="num">{{ product.priceWithoutTax or DASH }}</td>
+    <td class="num">{{ product.exciseAmount or DASH }}</td>
+    <td class="num">{{ product.turnoverSize or DASH }}</td>
+    <td class="centre">{{ product.ndsRate or DASH }}</td>
+    <td class="num">{{ product.ndsAmount or DASH }}</td>
+    <td class="num">{{ product.priceWithTax or DASH }}</td>
+    <td>{{ product.productDeclaration or DASH }}</td>
+  </tr>
+  {% endfor %}
+  {% set s = doc.productSet %}
+  <tr class="totals">
+    <td colspan="5" class="centre">{{ L('total') }}</td>
+    <td class="num">{{ s.totalPriceWithoutTax or DASH }}</td>
+    <td class="num">{{ s.totalExciseAmount or DASH }}</td>
+    <td class="num">{{ s.totalTurnoverSize or DASH }}</td>
+    <td>{{ DASH }}</td>
+    <td class="num">{{ s.totalNdsAmount or DASH }}</td>
+    <td class="num">{{ s.totalPriceWithTax or DASH }}</td>
+    <td>{{ DASH }}</td>
+  </tr>
+</table>
+
+{% if doc.sellerAgentTin %}
+<div class="section">{{ L('section_i') }}</div>
+<table>
+  {{ row(L('tin'), doc.sellerAgentTin) }}
+  {{ row(L('name'), doc.sellerAgentName) }}
+  {{ row(L('address'), doc.sellerAgentAddress) }}
+</table>
+{% endif %}
+
+{% if doc.customerAgentTin %}
+<div class="section">{{ L('section_j') }}</div>
+<table>
+  {{ row(L('tin'), doc.customerAgentTin) }}
+  {{ row(L('name'), doc.customerAgentName) }}
+  {{ row(L('address'), doc.customerAgentAddress) }}
+</table>
+{% endif %}
+
+{% if doc.addInf %}
+<div class="section">{{ L('section_k') }}</div>
+<table>{{ row(L('additional_info'), doc.addInf) }}</table>
+{% endif %}
+{% endblock %}
