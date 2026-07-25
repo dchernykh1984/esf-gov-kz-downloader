@@ -1,0 +1,50 @@
+[project]
+name = "esf-gov-kz-downloader"
+version = "0.1.0"
+description = "Download documents from the Kazakhstan IS ESF (esf.gov.kz) SOAP API"
+authors = [{ name = "Denis Chernykh", email = "education03@mail.ru" }]
+requires-python = ">=3.14,<4"
+dependencies = [
+    "zeep>=4.3,<5",
+    "requests>=2.32,<3",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.16,<0.17",
+    "pre-commit>=4.6,<5",
+    "mypy>=1.20,<3",
+    "types-requests>=2.32,<3",
+    "commitizen>=4.16,<5",
+]
+
+[tool.uv]
+default-groups = "all"
+# A script, not a distributable package: install the dependencies but do not
+# build the project itself.
+package = false
+
+[tool.ruff]
+line-length = 88
+# target-version is inferred from project.requires-python.
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "N",   # pep8-naming
+    "C90", # McCabe cyclomatic complexity
+    "UP",  # pyupgrade - modernise syntax for target Python version
+    "B",   # flake8-bugbear - common bugs and design issues
+    "S",   # flake8-bandit - security
+    "PTH", # flake8-use-pathlib - prefer pathlib over os.path
+    "RUF", # Ruff-specific rules
+]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+[tool.mypy]
+ignore_missing_imports = true
