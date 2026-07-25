@@ -6,12 +6,19 @@ repos:
       - id: check-toml
       - id: check-merge-conflict
       - id: check-added-large-files
+        # The bundled DejaVu faces are ~740 KB each.
+        args: [--maxkb=800]
       # Last line of defence against committing an NCA RK key container.
       - id: detect-private-key
+      # fonts/ holds vendored upstream files; reformatting them would rewrite
+      # a third-party licence text.
       - id: end-of-file-fixer
+        exclude: ^fonts/
       - id: trailing-whitespace
+        exclude: ^fonts/
       - id: mixed-line-ending
         args: [--fix=lf]
+        exclude: ^fonts/
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.16.0
