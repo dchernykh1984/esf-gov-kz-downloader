@@ -1,0 +1,16 @@
+version: 2
+
+# Dependabot has no workflow_dispatch trigger of its own. To run these updates
+# on demand, use the "Check for updates" button under
+# Insights -> Dependency graph -> Dependabot.
+updates:
+  # Keeps both pyproject.toml and uv.lock in step.
+  - package-ecosystem: "uv"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
