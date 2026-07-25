@@ -50,6 +50,14 @@ select = [
     "RUF", # Ruff-specific rules
 ]
 
+ignore = [
+    # Cyrillic letters that resemble Latin ones. This project renders Russian
+    # and Kazakh tax forms, so such characters are the point, not a mistake.
+    "RUF001",
+    "RUF002",
+    "RUF003",
+]
+
 [tool.ruff.lint.mccabe]
 max-complexity = 10
 
