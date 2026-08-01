@@ -22,7 +22,7 @@ dev = [
     "pre-commit>=4.6,<5",
     "mypy>=1.20,<3",
     "types-requests>=2.32,<3",
-    "commitizen>=4.16,<5",
+    "commitizen>=4.17.0,<5",
 ]
 
 [tool.uv]
