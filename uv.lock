@@ -1101,7 +1101,7 @@ wheels = [
 
 [[package]]
 name = "xhtml2pdf"
-version = "0.2.17"
+version = "0.2.21"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "arabic-reshaper" },
@@ -1114,9 +1114,9 @@ dependencies = [
     { name = "reportlab" },
     { name = "svglib" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/da/9a/3b29831d8617ecbcf0b0aaa2b3e1b24f3fd1bbd204678ae86e9fee2f4239/xhtml2pdf-0.2.17.tar.gz", hash = "sha256:09ddbc31aa0e38a16f2f3cb73be89af5f7c968c17a564afdd685d280e39c526d", size = 139727, upload-time = "2025-02-23T23:17:02.484Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/9d/86/05f32dd25ccdef51960268305ef4459cceef8a5188888bf85b84be8c8aa6/xhtml2pdf-0.2.21.tar.gz", hash = "sha256:c9b61611b9334040e27762fcdd3e8b98febf4b10cd916e108dfaf763d820907d", size = 355002, upload-time = "2026-09-26T20:24:38.223Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/93/ca/d53764f0534ff857239595f090f4cb83b599d226cc326c7de5eb3d802715/xhtml2pdf-0.2.17-py3-none-any.whl", hash = "sha256:61a7ecac829fed518f7dbcb916e9d56bea6e521e02e54644b3d0ca33f0658315", size = 125349, upload-time = "2025-02-24T20:44:42.604Z" },
+    { url = "https://files.pythonhosted.org/packages/3e/00/5fdcc632d71b865e8f9f3da98894c6824a7d1b11b27c970dbe247d84dfff/xhtml2pdf-0.2.21-py3-none-any.whl", hash = "sha256:b63c72b23afe5e09811e4f1873332c4736ef1a849498c403fe8cf89fdb3fff42", size = 239916, upload-time = "2026-09-26T20:24:36.542Z" },
 ]
 
 [[package]]
